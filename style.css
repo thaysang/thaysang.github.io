@@ -1,8 +1,6 @@
 body {
-    font-family: 'Share Tech', sans-serif;
     color: white;
-   display: flex;
-   margin: 0;
+    margin: 0;
     width: 100vw;
     height: 100vh;
     text-shadow: 8px 8px 10px #0000008c;
