@@ -77,7 +77,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 forward(100)
 `;function xw(){const[e,t]=z.exports.useState(ww);function r({error:n,resetErrorBoundary:o}){return Uu(Sr.exports.Div,{role:"alert",children:[te(Sr.exports.H3,{color:"red",children:"Error:"}),te(Sr.exports.P,{color:"red",children:n.message}),te(Sr.exports.Button,{onClick:o,children:"RESET"})]})}return Uu(Sr.exports.Div,{flex:1,display:"flex",flexDirection:"row",width:"100vw",height:"100vh",children:[te(Sr.exports.Div,{flex:1,display:"flex",children:te(vw,{defaultLanguage:"javascript",theme:"vs-dark",defaultValue:e,options:{fontSize:22},onChange:n=>{t(n)}})}),te(Sr.exports.Div,{flex:1,display:"flex",bg:"white",children:te(Sw,{FallbackComponent:r,onReset:()=>{},children:te(CS,{width:"100%",height:"100%",initialContent:`<html><head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <script type="text/javascript" src="./realturtle.js"><\/script></head>
+            <script type="text/javascript" src="https://thaysang.github.io/turtle/assets/realturtle.js"><\/script></head>
   <body>
     <canvas id="real-turtle"></canvas>
     <script type="text/javascript" src="https://unpkg.com/real-turtle/build/helpers/simple.js"><\/script>
