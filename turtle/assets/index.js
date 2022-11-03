@@ -135,7 +135,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 forward(100)
 `;function u2(){const[e,t]=C.exports.useState(gf),[n,r]=C.exports.useState(gf);function o({error:i,resetErrorBoundary:l}){return so(Vo,{role:"alert",children:[B(uf,{sx:{color:"red"},children:"Error:"}),B(uf,{sx:{color:"red"},children:i.message}),B(Kw,{variant:"outlined",onClick:l,children:"RESET"})]})}return so(Vo,{sx:{flex:1,display:"flex",flexDirection:"row",width:"100vw",height:"100vh"},children:[B(Nw,{sx:{height:32,backgroundColor:"black",display:"flex",alignItems:"center"},children:B(ww,{color:"primary","aria-label":"RUN",sx:{height:32,color:"white",width:64,marinRight:100},onClick:()=>{r(e)},children:"\u25B6"})}),B(Vo,{sx:{flex:1,display:"flex",marginTop:4},children:B(o2,{defaultLanguage:"javascript",theme:"vs-dark",defaultValue:e,options:{fontSize:22},onChange:i=>{t(i)}})}),B(Vo,{sx:{flex:1,display:"flex",backgroundColor:"white"},children:B(l2,{FallbackComponent:o,onReset:()=>{},children:B(fk,{width:"100%",height:"100%",initialContent:`<html><head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <script type="text/javascript" src="https://raw.githubusercontent.com/thaysang/thaysang.github.io/main/turtle/assets/realturtle.js"><\/script></head>
+            <script type="text/javascript" src="https://raw.githubusercontent.com/thaysang/thaysang.github.io/main/turtle/assets/realturtle.js" crossOrigin><\/script></head>
   <body>
     <canvas id="real-turtle"></canvas>
     <script type="text/javascript" src="https://unpkg.com/real-turtle/build/helpers/simple.js"><\/script>
