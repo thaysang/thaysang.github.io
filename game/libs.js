@@ -1,6 +1,11 @@
-const app = new PIXI.Application({ width: window.innerWidth, height: window.innerHeight, backgroundAlpha: 0, antialias: true })
+const app = new PIXI.Application({ 
+  width: window.innerWidth, 
+  height: window.innerHeight,autoDensity: true, resolution: 1.0, 
+  backgroundAlpha: 0 })
 document.body.appendChild(app.view)
-const graphic = new PIXI.Graphics()
+PIXI.smooth.SmoothGraphics.prototype.drawStar = PIXI.Graphics.prototype.drawStar;
+
+const graphic = new PIXI.smooth.SmoothGraphics()
 const forever = (cb) => app.ticker.add((dt) => cb(dt))
 
 class Sprite extends PIXI.Sprite {
@@ -8,7 +13,7 @@ class Sprite extends PIXI.Sprite {
     super(params)
   }
   onClick(cb){
-    return this.on('pointertap',cb)
+    return this.on('pointertap',(e)=>cb(e.client))
   }
 }
 
@@ -26,43 +31,45 @@ const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,...props}={}) => {
 
 const image = (url) => PIXI.Texture.from(url)
 
-const rect = (width,height,{fill="black",lineWidth=0,lineColor="black",borderRadius=0}={}) => {
+const rect = (width,height,{fill="black",bdW=0,bdC="black",bdR=0}={}) => {
   graphic.clear() 
-  graphic.lineStyle(lineWidth,_color(lineColor),1); 
-  graphic.beginFill(_color(fill));
-  if(borderRadius>0) graphic.drawRoundedRect(0,0,width,height,borderRadius)
+  graphic.lineStyle(bdW,_color(bdC),1); 
+  graphic.beginFill(_color(fill),1.0,true);
+  if(bdR>0) graphic.drawRoundedRect(0,0,width,height,bdR)
   else graphic.drawRect(0,0,width,height);
   graphic.endFill();
   return app.renderer.generateTexture(graphic)
 }
-const circle = (r,{fill="black",borderWidth=0,borderColor="black"}={}) => {
+const circle = (r,{fill="black",bdW=0,bdC="black"}={}) => {
   graphic.clear() 
-  graphic.lineStyle(borderWidth,_color(borderColor),1); 
-  graphic.beginFill(_color(fill));
+  graphic.lineStyle(bdW,_color(bdC),1); 
+  // graphic.beginFill(_color(fill));
+
+  graphic.beginFill(_color(fill),1.0,true);
   graphic.drawCircle(0,0,r);
   graphic.endFill();
   return app.renderer.generateTexture(graphic)
 }
-const star = (n,width,{fill="black",lineWidth=0,lineColor="black"}={}) => {
+const star = (n,width,{fill="black",bdW=0,bdC="black"}={}) => {
   graphic.clear() 
-  graphic.lineStyle(lineWidth,_color(lineColor),1); 
-  graphic.beginFill(_color(fill));
+  graphic.lineStyle(bdW,_color(bdC),1); 
+  graphic.beginFill(_color(fill),1.0,true);
   graphic.drawStar(0,0,n,width);
   graphic.endFill();
   return app.renderer.generateTexture(graphic)
 }
-const elip = (width,height,{fill="black",lineWidth=0,lineColor="black"}={}) => {
+const elip = (width,height,{fill="black",bdW=0,bdC="black"}={}) => {
   graphic.clear() 
-  graphic.lineStyle(lineWidth,_color(lineColor),1); 
-  graphic.beginFill(_color(fill));
+  graphic.lineStyle(bdW,_color(bdC),1); 
+  graphic.beginFill(_color(fill),1.0,true);
   graphic.drawEllipse(0,0,width/2,height/2);
   graphic.endFill();
   return app.renderer.generateTexture(graphic)
 }
-const polygon = (path,{fill="black",lineWidth=0,lineColor="black"}={}) => {
+const polygon = (path,{fill="black",bdW=0,bdC="black"}={}) => {
   graphic.clear() 
-  graphic.lineStyle(lineWidth,_color(lineColor),1); 
-  graphic.beginFill(_color(fill));
+  graphic.lineStyle(bdW,_color(bdC),1); 
+  graphic.beginFill(_color(fill),1.0,true);
   graphic.drawPolygon(path);
   graphic.endFill();
   return app.renderer.generateTexture(graphic)
@@ -78,7 +85,7 @@ const text = (txt,{x=0,y=0,...style}={}) => {
 }
 //Sounds
 const sound = {
-  add: (name) => PIXI.sound.add(name,'/sound/'+name),
+  add: (name) => PIXI.sound.add(name,'./sound/'+name),
   play: (name) => PIXI.sound.play(name)
 }
 
