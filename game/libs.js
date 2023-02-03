@@ -10,18 +10,16 @@ const {Engine,Bodies,Composite,Body,Collision} = Matter
 
 const engine = Engine.create();
 const setGravity = (g) => engine.gravity = g
-const sprites = []
+
 app.ticker.add((dt) => {
   Engine.update(engine,1000/60)
-
-  sprites.forEach(spi => {
+  app.stage.children.forEach(spi => {
     if(spi.body){
       spi.x = spi.body.position.x
       spi.y = spi.body.position.y
       spi.rotation = spi.body.angle
     }
   })
-
   if(typeof forever === 'function') forever()
 })
 
@@ -104,14 +102,12 @@ const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,a=0,...props}={}) => {
         props.height?props.height:texture.height,
         {angle:Math.PI*a/180,...props})
       Composite.add(engine.world, sp.body);
-      sprites.push(sp)
     }
     if(props.body==="circle") {
       sp.body = Bodies.circle(x,y,
         props.r?props.r:texture.r,
         {angle:Math.PI*a/180,...props})
       Composite.add(engine.world, sp.body);
-      sprites.push(sp)
     }
   }
   app.stage.addChild(sp);
