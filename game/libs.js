@@ -6,7 +6,24 @@ document.body.appendChild(app.view)
 PIXI.smooth.SmoothGraphics.prototype.drawStar = PIXI.Graphics.prototype.drawStar;
 
 const graphic = new PIXI.smooth.SmoothGraphics()
-const forever = (cb) => app.ticker.add((dt) => cb(dt))
+const {Engine,Bodies,Composite,Body,Collision} = Matter
+
+const engine = Engine.create();
+const setGravity = (g) => engine.gravity = g
+const sprites = []
+app.ticker.add((dt) => {
+  Engine.update(engine,1000/60)
+
+  sprites.forEach(spi => {
+    if(spi.body){
+      spi.x = spi.body.position.x
+      spi.y = spi.body.position.y
+      spi.rotation = spi.body.angle
+    }
+  })
+
+  if(typeof forever === 'function') forever()
+})
 
 class Sprite extends PIXI.Sprite {
   constructor(params) {
@@ -15,9 +32,64 @@ class Sprite extends PIXI.Sprite {
   onClick(cb){
     return this.on('pointertap',(e)=>cb(e.client))
   }
+  jump(x,y){
+    if(this.body) Body.applyForce(this.body,this.body.position,{x,y})
+  }
+  move(dx,dy){
+    if(this.body) Body.setPosition(this.body,{
+      x:this.body.position.x + dx,
+      y:this.body.position.y + dy
+    })
+  }
+  setPosition(x,y){
+    if(this.body) Body.setPosition(this.body,{x,y})
+  }
+  setP(x,y){
+    this.setPosition(x,y)
+  }
+  setVelocity(x,y){
+    if(this.body) Body.setVelocity(this.body,{x,y})
+  }
+  setV(x,y){
+    this.setVelocity(x,y)
+  }
+  setAngle(a){
+    if(this.body) Body.setAngle(this.body,Math.PI*a/180)
+  }
+  setA(a){
+    this.setAngle(a)
+  }
+  setAV(a){
+    if(this.body) Body.setAngularVelocity(this.body,Math.PI*a/180)
+  }
+  setCentre(x,y){
+    if(this.body) Body.setCentre(this.body,{x,y},this.body.position)
+  }
+  setDensity(d){
+    if(this.body) Body.setDensity(this.body,d)
+  }
+  setMass(m){
+    if(this.body) Body.setMass(this.body,m)
+  }
+  setStatic(iS){
+    if(this.body) Body.setStatic(this.body,iS)
+  }
+  translate(x,y){
+    if(this.body) Body.translate(this.body,{x,y})
+  }
+  rotate(a){
+    if(this.body) Body.rotate(this.body,Math.PI*a/180)
+  }
+  collides(sp){
+    return Collision.collides(this.body, sp.body)
+  }
+  remove(){
+    Composite.remove(engine.world, this.body)
+    app.stage.removeChild(this) 
+  }
 }
 
-const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,...props}={}) => {
+const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,a=0,...props}={}) => {
   const sp = new Sprite(texture)
   sp.interactive = true;
   sp.anchor.set(anchor)
@@ -25,22 +97,42 @@ const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,...props}={}) => {
   sp.y = y
   sp.scale.set(scale)
   Object.assign(sp,props)
+  if(props.body) {
+    if(props.body==="rect") {
+      sp.body = Bodies.rectangle(x,y,
+        props.width?props.width:texture.width,
+        props.height?props.height:texture.height,
+        {angle:Math.PI*a/180,...props})
+      Composite.add(engine.world, sp.body);
+      sprites.push(sp)
+    }
+    if(props.body==="circle") {
+      sp.body = Bodies.circle(x,y,
+        props.r?props.r:texture.r,
+        {angle:Math.PI*a/180,...props})
+      Composite.add(engine.world, sp.body);
+      sprites.push(sp)
+    }
+  }
   app.stage.addChild(sp);
   return sp
 }
 
 const image = (url) => PIXI.Texture.from(url)
 
-const rect = (width,height,{fill="black",bdW=0,bdC="black",bdR=0}={}) => {
+const rect = ({width=1,height=1,fill="black",bdW=0,bdC="black",bdR=0}={}) => {
   graphic.clear() 
   graphic.lineStyle(bdW,_color(bdC),1); 
   graphic.beginFill(_color(fill),1.0,true);
   if(bdR>0) graphic.drawRoundedRect(0,0,width,height,bdR)
   else graphic.drawRect(0,0,width,height);
   graphic.endFill();
-  return app.renderer.generateTexture(graphic)
+  const tt = app.renderer.generateTexture(graphic)
+  tt.width = width
+  tt.height = height
+  return tt
 }
-const circle = (r,{fill="black",bdW=0,bdC="black"}={}) => {
+const circle = ({r=1,fill="black",bdW=0,bdC="black"}={}) => {
   graphic.clear() 
   graphic.lineStyle(bdW,_color(bdC),1); 
   // graphic.beginFill(_color(fill));
@@ -48,7 +140,9 @@ const circle = (r,{fill="black",bdW=0,bdC="black"}={}) => {
   graphic.beginFill(_color(fill),1.0,true);
   graphic.drawCircle(0,0,r);
   graphic.endFill();
-  return app.renderer.generateTexture(graphic)
+  const tt = app.renderer.generateTexture(graphic)
+  tt.r = r
+  return tt
 }
 const star = (n,width,{fill="black",bdW=0,bdC="black"}={}) => {
   graphic.clear() 
@@ -97,3 +191,4 @@ const keyboard = {
     window.addEventListener('keyup',(e)=>cb(e.key))
   }
 }
+

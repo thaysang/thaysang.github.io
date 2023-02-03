@@ -11,3 +11,11 @@ const _color = (name) => {
   if (cl) return cl
   return 0x000000
 }
+
+const colorList = Object.keys(colorNames)
+
+const randInt = (min,max) => Math.floor(Math.random()*(max-min+1) + min)
+
+const randColor = () => {
+  return colorList[randInt(0,colorList.length-1)]
+}
