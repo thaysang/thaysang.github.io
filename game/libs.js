@@ -165,11 +165,13 @@ const polygon = (path,{fill="black",bdW=0,bdC="black"}={}) => {
   return app.renderer.generateTexture(graphic)
 }
 
-const text = (txt,{x=0,y=0,...style}={}) => {
+const text = (txt,{x=0,y=0,a=0,...style}={}) => {
   const basicText = new PIXI.Text(txt, new PIXI.TextStyle({...style}));
   basicText.x = x;
   basicText.y = y;
   basicText.anchor.set(0.5)
+  basicText.rotation = Math.PI*a/180
+  Object.assign(basicText,style)
   app.stage.addChild(basicText);
   return basicText
 }
