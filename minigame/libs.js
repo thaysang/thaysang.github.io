@@ -41,8 +41,51 @@ class Sprite extends PIXI.Sprite {
       y:this.body.position.y + dy
     })
   }
+  setPosition(x,y){
+    if(this.body) Body.setPosition(this.body,{x,y})
+  }
+  setP(x,y){
+    this.setPosition(x,y)
+  }
+  setVelocity(x,y){
+    if(this.body) Body.setVelocity(this.body,{x,y})
+  }
+  setV(x,y){
+    this.setVelocity(x,y)
+  }
+  setAngle(a){
+    if(this.body) Body.setAngle(this.body,Math.PI*a/180)
+  }
+  setA(a){
+    this.setAngle(a)
+  }
+  setAV(a){
+    if(this.body) Body.setAngularVelocity(this.body,Math.PI*a/180)
+  }
+  setCentre(x,y){
+    if(this.body) Body.setCentre(this.body,{x,y},this.body.position)
+  }
+  setDensity(d){
+    if(this.body) Body.setDensity(this.body,d)
+  }
+  setMass(m){
+    if(this.body) Body.setMass(this.body,m)
+  }
+  setStatic(iS){
+    if(this.body) Body.setStatic(this.body,iS)
+  }
+  translate(x,y){
+    if(this.body) Body.translate(this.body,{x,y})
+  }
+  rotate(a){
+    if(this.body) Body.rotate(this.body,Math.PI*a/180)
+  }
   collides(sp){
     return Collision.collides(this.body, sp.body)
+  }
+  remove(){
+    Composite.remove(engine.world, this.body)
+    app.stage.removeChild(this) 
   }
 }
 
