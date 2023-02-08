@@ -30,6 +30,9 @@ class Sprite extends PIXI.Sprite {
   onClick(cb){
     return this.on('pointertap',(e)=>cb(e.client))
   }
+  setTint(cl){
+    this.tint = _color(cl)
+  }
   jump(x,y){
     if(this.body) Body.applyForce(this.body,this.body.position,{x,y})
   }
@@ -85,6 +88,25 @@ class Sprite extends PIXI.Sprite {
     Composite.remove(engine.world, this.body)
     app.stage.removeChild(this) 
   }
+}
+
+PIXI.TilingSprite.prototype.move = function(dx,dy){
+  this.tilePosition.x += dx
+  this.tilePosition.y += dy
+}
+
+const background = (texture,{x=320,y=240,anchor=0.5,scaleX=1,scaleY=1,width,height}={}) => {
+  const tilingSprite = new PIXI.TilingSprite(texture,
+    width?width: app.screen.width,
+    height?height:app.screen.height)
+    tilingSprite.anchor.set(anchor)
+
+  tilingSprite.tileScale.x = scaleX
+  tilingSprite.tileScale.y = scaleY
+  tilingSprite.position.x = x 
+  tilingSprite.position.y = y
+  app.stage.addChild(tilingSprite);
+  return tilingSprite
 }
 
 const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,a=0,...props}={}) => {
