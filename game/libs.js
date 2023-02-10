@@ -85,7 +85,7 @@ class Sprite extends PIXI.Sprite {
     return Collision.collides(this.body, sp.body)
   }
   remove(){
-    Composite.remove(engine.world, this.body)
+    if(this.body) Composite.remove(engine.world, this.body)
     app.stage.removeChild(this) 
   }
 }
