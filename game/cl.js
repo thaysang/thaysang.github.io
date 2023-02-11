@@ -15,6 +15,8 @@ const _color = (name) => {
 const colorList = Object.keys(colorNames)
 
 const randInt = (min,max) => Math.floor(Math.random()*(max-min+1) + min)
+const random = (min,max) => Math.floor(Math.random()*(max-min+1) + min)
+const rand = (min,max) => Math.floor(Math.random()*(max-min+1) + min)
 
 const randColor = () => {
   return colorList[randInt(0,colorList.length-1)]
