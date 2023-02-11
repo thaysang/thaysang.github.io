@@ -9,7 +9,7 @@ const graphic = new PIXI.smooth.SmoothGraphics()
 const {Engine,Bodies,Composite,Body,Collision} = Matter
 
 const engine = Engine.create();
-const setGravity = (g) => engine.gravity = g
+const setGravity = (x,y) => engine.gravity = {x,y}
 
 app.ticker.add((dt) => {
   Engine.update(engine,1000/60)
@@ -80,6 +80,7 @@ class Sprite extends PIXI.Sprite {
   }
   rotate(a){
     if(this.body) Body.rotate(this.body,Math.PI*a/180)
+    else this.rotation = Math.PI*a/180
   }
   collides(sp){
     return Collision.collides(this.body, sp.body)
@@ -131,6 +132,8 @@ const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,a=0,...props}={}) => {
         {angle:Math.PI*a/180,...props})
       Composite.add(engine.world, sp.body);
     }
+  } else {
+    sp.rotation = Math.PI*a/180
   }
   app.stage.addChild(sp);
   return sp
