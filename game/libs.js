@@ -110,13 +110,16 @@ const background = (texture,{x=320,y=240,anchor=0.5,scaleX=1,scaleY=1,width,heig
   return tilingSprite
 }
 
-const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,a=0,...props}={}) => {
+const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,a=0,tint,...props}={}) => {
   const sp = new Sprite(texture)
   sp.interactive = true;
   sp.anchor.set(anchor)
   sp.x = x
   sp.y = y
   sp.scale.set(scale)
+  if(tint){
+    sp.tint = _color(tint)
+  }
   Object.assign(sp,props)
   if(props.body) {
     if(props.body==="rect") {
@@ -141,7 +144,7 @@ const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,a=0,...props}={}) => {
 
 const image = (url) => PIXI.Texture.from(url)
 
-const rect = ({width=1,height=1,fill="black",bdW=0,bdC="black",bdR=0}={}) => {
+const rect = (width=10,height=10,{fill="black",bdW=0,bdC="black",bdR=0}={}) => {
   graphic.clear() 
   graphic.lineStyle(bdW,_color(bdC),1); 
   graphic.beginFill(_color(fill),1.0,true);
@@ -153,7 +156,7 @@ const rect = ({width=1,height=1,fill="black",bdW=0,bdC="black",bdR=0}={}) => {
   tt.height = height
   return tt
 }
-const circle = ({r=1,fill="black",bdW=0,bdC="black"}={}) => {
+const circle = (r=10,{fill="black",bdW=0,bdC="black"}={}) => {
   graphic.clear() 
   graphic.lineStyle(bdW,_color(bdC),1); 
   // graphic.beginFill(_color(fill));
@@ -165,7 +168,7 @@ const circle = ({r=1,fill="black",bdW=0,bdC="black"}={}) => {
   tt.r = r
   return tt
 }
-const star = (n,width,{fill="black",bdW=0,bdC="black"}={}) => {
+const star = (n=5,width=20,{fill="black",bdW=0,bdC="black"}={}) => {
   graphic.clear() 
   graphic.lineStyle(bdW,_color(bdC),1); 
   graphic.beginFill(_color(fill),1.0,true);
