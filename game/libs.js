@@ -7,9 +7,39 @@ PIXI.smooth.SmoothGraphics.prototype.drawStar = PIXI.Graphics.prototype.drawStar
 
 const graphic = new PIXI.smooth.SmoothGraphics()
 const {Engine,Bodies,Composite,Body,Collision} = Matter
-
 const engine = Engine.create();
 const setGravity = (x,y) => engine.gravity = {x,y}
+
+class Particle {
+  constructor(name,textures){
+    this.container = new PIXI.ParticleContainer(10000, {
+      scale: true,
+      position: true,
+      rotation: true,
+      uvs: true,
+      alpha: true,
+    })
+    this.emitter = new PIXI.particles.Emitter(
+      this.container, particleConfig(name,textures)
+    )
+    this.emitter.emit = false
+    
+  }
+  fire(x,y){
+    this.container.x = x
+    this.container.y = y
+    this.emitter.emit = true;
+  }
+  update(dt=1,k=0.01){
+    this.emitter.update(dt * 0.01)
+  }
+}
+
+const particle = (name,textures) => {
+  const pt = new Particle(name,textures)
+  app.stage.addChild(pt.container); 
+  return pt
+}
 
 app.ticker.add((dt) => {
   Engine.update(engine,1000/60)
@@ -20,7 +50,7 @@ app.ticker.add((dt) => {
       spi.rotation = spi.body.angle
     }
   })
-  if(typeof forever === 'function') forever()
+  if(typeof forever === 'function') forever(dt)
 })
 
 class Sprite extends PIXI.Sprite {
@@ -74,6 +104,9 @@ class Sprite extends PIXI.Sprite {
   }
   setStatic(iS){
     if(this.body) Body.setStatic(this.body,iS)
+  }
+  setSkew(x,y){
+    this.skew = {x:x*Math.PI/180,y:y*Math.PI/180}
   }
   translate(x,y){
     if(this.body) Body.translate(this.body,{x,y})
@@ -144,10 +177,10 @@ const sprite = (texture,{x=0,y=0,anchor=0.5,scale=1,a=0,tint,...props}={}) => {
 
 const image = (url) => PIXI.Texture.from(url)
 
-const rect = (width=10,height=10,{fill="black",bdW=0,bdC="black",bdR=0}={}) => {
+const rect = (width=10,height=10,{fill="black",bdW=0,bdC="black",bdR=0,alpha=1.0}={}) => {
   graphic.clear() 
   graphic.lineStyle(bdW,_color(bdC),1); 
-  graphic.beginFill(_color(fill),1.0,true);
+  graphic.beginFill(_color(fill),alpha,true);
   if(bdR>0) graphic.drawRoundedRect(0,0,width,height,bdR)
   else graphic.drawRect(0,0,width,height);
   graphic.endFill();
@@ -156,40 +189,48 @@ const rect = (width=10,height=10,{fill="black",bdW=0,bdC="black",bdR=0}={}) => {
   tt.height = height
   return tt
 }
-const circle = (r=10,{fill="black",bdW=0,bdC="black"}={}) => {
+const circle = (r=10,{fill="black",bdW=0,bdC="black",alpha=1.0}={}) => {
   graphic.clear() 
   graphic.lineStyle(bdW,_color(bdC),1); 
   // graphic.beginFill(_color(fill));
 
-  graphic.beginFill(_color(fill),1.0,true);
+  graphic.beginFill(_color(fill),alpha,true);
   graphic.drawCircle(0,0,r);
   graphic.endFill();
   const tt = app.renderer.generateTexture(graphic)
   tt.r = r
   return tt
 }
-const star = (n=5,width=20,{fill="black",bdW=0,bdC="black"}={}) => {
+const star = (n=5,width=20,{fill="black",bdW=0,bdC="black",alpha=1.0}={}) => {
   graphic.clear() 
   graphic.lineStyle(bdW,_color(bdC),1); 
-  graphic.beginFill(_color(fill),1.0,true);
+  graphic.beginFill(_color(fill),alpha,true);
   graphic.drawStar(0,0,n,width);
   graphic.endFill();
   return app.renderer.generateTexture(graphic)
 }
-const elip = (width,height,{fill="black",bdW=0,bdC="black"}={}) => {
+const elip = (width,height,{fill="black",bdW=0,bdC="black",alpha=1.0}={}) => {
   graphic.clear() 
   graphic.lineStyle(bdW,_color(bdC),1); 
-  graphic.beginFill(_color(fill),1.0,true);
+  graphic.beginFill(_color(fill),alpha,true);
   graphic.drawEllipse(0,0,width/2,height/2);
   graphic.endFill();
   return app.renderer.generateTexture(graphic)
 }
-const polygon = (path,{fill="black",bdW=0,bdC="black"}={}) => {
+const polygon = (path,{fill="black",bdW=0,bdC="black",alpha=1.0}={}) => {
   graphic.clear() 
   graphic.lineStyle(bdW,_color(bdC),1); 
-  graphic.beginFill(_color(fill),1.0,true);
+  graphic.beginFill(_color(fill),alpha,true);
   graphic.drawPolygon(path);
   graphic.endFill();
+  return app.renderer.generateTexture(graphic)
+}
+const line = (path,{color="black",size=1}={}) => {
+  graphic.clear() 
+  graphic.lineStyle(size,_color(color),1); 
+  graphic.moveTo(path[0],path[1]);
+  graphic.lineTo(path[2],path[3]);
+  graphic.closePath();
   return app.renderer.generateTexture(graphic)
 }
 
