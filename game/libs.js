@@ -25,10 +25,13 @@ class Particle {
     this.emitter.emit = false
     
   }
-  fire(x,y){
+  start(x=320,y=240){
     this.container.x = x
     this.container.y = y
     this.emitter.emit = true;
+  }
+  stop(){
+    this.emitter.emit = false;
   }
   update(dt=1,k=0.01){
     this.emitter.update(dt * 0.01)
@@ -67,13 +70,20 @@ class Sprite extends PIXI.Sprite {
     if(this.body) Body.applyForce(this.body,this.body.position,{x,y})
   }
   move(dx,dy){
-    if(this.body) Body.setPosition(this.body,{
+    if(this.body) {Body.setPosition(this.body,{
       x:this.body.position.x + dx,
       y:this.body.position.y + dy
-    })
+    })} else {
+      this.x += dx
+      this.y += dy
+    }
   }
   setPosition(x,y){
     if(this.body) Body.setPosition(this.body,{x,y})
+    else {
+      this.x = x
+      this.y = y
+    }
   }
   setP(x,y){
     this.setPosition(x,y)
@@ -86,6 +96,7 @@ class Sprite extends PIXI.Sprite {
   }
   setAngle(a){
     if(this.body) Body.setAngle(this.body,Math.PI*a/180)
+    else this.rotation = Math.PI*a/180
   }
   setA(a){
     this.setAngle(a)
@@ -113,7 +124,7 @@ class Sprite extends PIXI.Sprite {
   }
   rotate(a){
     if(this.body) Body.rotate(this.body,Math.PI*a/180)
-    else this.rotation = Math.PI*a/180
+    else this.rotation += Math.PI*a/180
   }
   collides(sp){
     return Collision.collides(this.body, sp.body)
@@ -129,16 +140,24 @@ PIXI.TilingSprite.prototype.move = function(dx,dy){
   this.tilePosition.y += dy
 }
 
-const background = (texture,{x=320,y=240,anchor=0.5,scaleX=1,scaleY=1,width,height}={}) => {
+PIXI.TilingSprite.prototype.onClick = function(cb){
+  return this.on('pointertap',(e)=>cb(e.client))
+}
+
+const background = (texture,{x=320,y=240,anchor=0.5,scale,scaleX,scaleY,width,height}={}) => {
   const tilingSprite = new PIXI.TilingSprite(texture,
     width?width: app.screen.width,
     height?height:app.screen.height)
     tilingSprite.anchor.set(anchor)
-
-  tilingSprite.tileScale.x = scaleX
-  tilingSprite.tileScale.y = scaleY
+  if(scale) {
+    tilingSprite.tileScale.x = scale
+    tilingSprite.tileScale.y = scale
+  }
+  if(scaleX) tilingSprite.tileScale.x = scaleX
+  if(scaleY) tilingSprite.tileScale.y = scaleY
   tilingSprite.position.x = x 
   tilingSprite.position.y = y
+  tilingSprite.interactive = true;
   app.stage.addChild(tilingSprite);
   return tilingSprite
 }
