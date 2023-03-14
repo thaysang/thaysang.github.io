@@ -23,3 +23,4 @@ const randColor = () => {
 }
 
 const input = (q) => prompt(q)
+const output = (q) => console.log(q)
