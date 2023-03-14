@@ -18,6 +18,7 @@ const right = (p) => turtle.rt(p)
 const gt = (x,y) => turtle.gt(240+x,180-y)
 const mt = (x,y) => turtle.setPosition(240+x,180-y)
 const moveTo = (x,y) => turtle.setPosition(240+x,180-y)
+const pos = (x,y) => turtle.setPosition(240+x,180-y)
 
 const seth = (p) => turtle.seth(p)
 
