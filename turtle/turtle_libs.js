@@ -56,5 +56,6 @@ const penUp = () => turtle.pu()
 
 const circle = (r,a=360,c=true) => turtle.circle(r,a,c)
 const cc = (r,a=360,c=true) => turtle.circle(r,a,c)
+const dot = (size,color) => turtle.dot(size,color)
 
 seth(90)
