@@ -25,7 +25,7 @@ class Particle {
     this.emitter.emit = false
     
   }
-  start(x=320,y=180){
+  start(x=240,y=180){
     this.container.x = x
     this.container.y = y
     this.emitter.emit = true;
@@ -144,7 +144,7 @@ PIXI.TilingSprite.prototype.onClick = function(cb){
   return this.on('pointertap',(e)=>cb(e.client))
 }
 
-const background = (texture,{x=240,y=240,anchor=0.5,scale,scaleX,scaleY,width,height}={}) => {
+const background = (texture,{x=240,y=180,anchor=0.5,scale,scaleX,scaleY,width,height}={}) => {
   const tilingSprite = new PIXI.TilingSprite(texture,
     width?width: app.screen.width,
     height?height:app.screen.height)
